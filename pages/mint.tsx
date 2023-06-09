@@ -1,43 +1,54 @@
-import * as utils from "lib/minting-utils"
-import { useCallback, useMemo, useState } from "react"
-import { useCardano, utility } from "use-cardano"
+import * as utils from "lib/minting-utils";
+import { useCallback, useMemo, useState } from "react";
+import { useCardano, utility } from "use-cardano";
 
-import { Inter } from "@next/font/google"
+import { Inter } from "@next/font/google";
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"] });
 
 export default function Mint() {
-  const { lucid, account, showToaster, hideToaster } = useCardano()
+  const { lucid, account, showToaster, hideToaster } = useCardano();
 
-  const [name, setName] = useState("")
+  const [name, setName] = useState("");
 
   const mintNFT = useCallback(async () => {
     try {
-      if (!lucid || !account?.address || !name) return
+      if (!lucid || !account?.address || !name) return;
 
-      const nftTx = await utils.mintNFT({ lucid, address: account.address, name })
+      const nftTx = await utils.mintNFT({
+        lucid,
+        address: account.address,
+        name,
+      });
 
-      showToaster("Minted NFT", `Transaction: ${nftTx}`)
+      showToaster("Minted NFT", `Transaction: ${nftTx}`);
     } catch (e) {
-      if (utility.isError(e)) showToaster("Could not mint NFT", e.message)
-      else if (typeof e === "string") showToaster("Could not mint NFT", e)
+      if (utility.isError(e)) showToaster("Could not mint NFT", e.message);
+      else if (typeof e === "string") showToaster("Could not mint NFT", e);
     }
-  }, [lucid, account?.address, showToaster, name])
+  }, [lucid, account?.address, showToaster, name]);
 
   const burnNFT = useCallback(async () => {
     try {
-      if (!lucid || !account?.address || !name) return
+      if (!lucid || !account?.address || !name) return;
 
-      const nftTx = await utils.burnNFT({ lucid, address: account?.address, name })
+      const nftTx = await utils.burnNFT({
+        lucid,
+        address: account?.address,
+        name,
+      });
 
-      showToaster("Burned NFT", `Transaction: ${nftTx}`)
+      showToaster("Burned NFT", `Transaction: ${nftTx}`);
     } catch (e) {
-      if (utility.isError(e)) showToaster("Could not burn NFT", e.message)
-      else if (typeof e === "string") showToaster("Could not burn NFT", e)
+      if (utility.isError(e)) showToaster("Could not burn NFT", e.message);
+      else if (typeof e === "string") showToaster("Could not burn NFT", e);
     }
-  }, [lucid, account?.address, showToaster, name])
+  }, [lucid, account?.address, showToaster, name]);
 
-  const canMint = useMemo(() => lucid && account?.address && name, [lucid, account?.address, name])
+  const canMint = useMemo(
+    () => lucid && account?.address && name,
+    [lucid, account?.address, name]
+  );
 
   return (
     <div className="text-center max-w-4xl m-auto text-gray-900 dark:text-gray-100">
@@ -72,8 +83,8 @@ export default function Mint() {
             disabled={!canMint}
             className="border hover:bg-blue-400 text-white my-4 w-40 py-2 cursor-pointer transition-colors disabled:cursor-not-allowed disabled:text-gray-200 rounded bg-blue-300 disabled:bg-blue-200 dark:bg-white dark:text-gray-800 dark:disabled:bg-white dark:hover:bg-white font-bold uppercase"
             onClick={() => {
-              hideToaster()
-              mintNFT()
+              hideToaster();
+              mintNFT();
             }}
           >
             mint
@@ -83,8 +94,8 @@ export default function Mint() {
             disabled={!canMint}
             className="border ml-4 hover:bg-blue-400 text-white w-40 py-2 cursor-pointer transition-colors disabled:cursor-not-allowed disabled:text-gray-200 rounded bg-blue-300 disabled:bg-blue-200 dark:bg-white dark:text-gray-800 dark:disabled:bg-white dark:hover:bg-white font-bold uppercase"
             onClick={() => {
-              hideToaster()
-              burnNFT()
+              hideToaster();
+              burnNFT();
             }}
           >
             burn
@@ -92,5 +103,5 @@ export default function Mint() {
         </div>
       </div>
     </div>
-  )
+  );
 }
